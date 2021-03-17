@@ -174,30 +174,6 @@ def main():
         help="Drop database then create new one and populate with content from the specified file",
     )
 
-    parser.add_argument(
-        "-f",
-        "--file",
-        help="file containing the list of proverbs to be stored in database",
-    )
-
-    parser.add_argument(
-        "--dry-run",
-        help="make proverbs from file but do not store them intro database",
-    )
-
-    parser.add_argument(
-        "-g",
-        "--get",
-        help="get proverb from database by the specified id",
-    )
-
-    parser.add_argument(
-        "-r",
-        "--random",
-        help="get random proverb from database",
-        action="store_true",
-    )
-
     args = parser.parse_args()
 
     dbmgr = DatabaseManager()
@@ -210,22 +186,6 @@ def main():
         proverbs = make_proverbs(args.upgrade)
         datamgr.add(proverbs)
         datamgr.show()
-
-    # if args.file:
-
-    #     proverbs = make_proverbs(args.file)
-    #     if args.dry_run:
-    #         for p in proverbs:
-    #             print(p)
-    #     else:
-    #         m.add(make_proverbs(args.file))
-    #         m.show()
-
-    # if args.get:
-    #     print(m.get(id=args.get))
-
-    # if args.random:
-    #     print(m.get_random())
 
 
 if __name__ == "__main__":
