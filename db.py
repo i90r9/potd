@@ -98,7 +98,7 @@ class ProverbData:
         return self._meaning
 
 
-class Engine:
+class DatabaseManager:
     def __init__(self, config=None):
         if not config:
             config = {
@@ -106,15 +106,20 @@ class Engine:
                 "database": settings.DB_NAME,
             }
         self._engine = create_engine(URL(**config))
+
+    def create(self):
         Base.metadata.create_all(bind=self._engine)
+
+    def remove(self):
+        Base.metadata.drop_all(bind=self._engine)
 
     def session(self):
         return session_scope(sessionmaker(self._engine))
 
 
 class DataManager:
-    def __init__(self, engine):
-        self._db = engine
+    def __init__(self, db):
+        self._db = db
         self._last_index = self._get_last_index()
 
     def _get_last_index(self):
@@ -188,7 +193,7 @@ def main():
 
     args = parser.parse_args()
 
-    e = Engine()
+    e = DatabaseManager()
     m = DataManager(e)
 
     if args.file:
