@@ -149,8 +149,9 @@ class DataManager:
         return self.get(id)
 
     def show(self):
-        for p in self.db_session.query(Proverb):
-            print(p)
+        with self._db.session() as session:
+            for p in session.query(Proverb):
+                print(p)
 
 
 def make_proverbs(filename):
@@ -167,10 +168,16 @@ def make_proverbs(filename):
 
 def main():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--upgrade",
+        help="Drop database then create new one and populate with content from the specified file",
+    )
+
     parser.add_argument(
         "-f",
         "--file",
-        help="file containing the list of proverbs to be stored in local database",
+        help="file containing the list of proverbs to be stored in database",
     )
 
     parser.add_argument(
@@ -193,23 +200,32 @@ def main():
 
     args = parser.parse_args()
 
-    e = DatabaseManager()
-    m = DataManager(e)
+    dbmgr = DatabaseManager()
 
-    if args.file:
-        proverbs = make_proverbs(args.file)
-        if args.dry_run:
-            for p in proverbs:
-                print(p)
-        else:
-            m.add(make_proverbs(args.file))
-            m.show()
+    if args.upgrade:
+        dbmgr.remove()
+        dbmgr.create()
 
-    if args.get:
-        print(m.get(id=args.get))
+        datamgr = DataManager(dbmgr)
+        proverbs = make_proverbs(args.upgrade)
+        datamgr.add(proverbs)
+        datamgr.show()
 
-    if args.random:
-        print(m.get_random())
+    # if args.file:
+
+    #     proverbs = make_proverbs(args.file)
+    #     if args.dry_run:
+    #         for p in proverbs:
+    #             print(p)
+    #     else:
+    #         m.add(make_proverbs(args.file))
+    #         m.show()
+
+    # if args.get:
+    #     print(m.get(id=args.get))
+
+    # if args.random:
+    #     print(m.get_random())
 
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     bot = telebot.TeleBot(settings.API_TOKEN)
 
-    data_mgr = db.DataManager(db.Engine())
+    data_mgr = db.DataManager(db.DatabaseManager())
 
     markup = telebot.types.ReplyKeyboardMarkup()
     btn = telebot.types.KeyboardButton("Get Me Another One!")
