@@ -36,6 +36,14 @@ if __name__ == "__main__":
             reply_markup=gen_markup(),
         )
 
+    @bot.message_handler(commands=["subscribe"])
+    def subscribe(message):
+        pass
+
+    @bot.message_handler(commands=["unsubscribe"])
+    def unsubscribe(message):
+        pass
+        
     @bot.message_handler(func=lambda message: True)
     def send_proverb(message):
         logger.info(f"Got message from user: {message.from_user}")

@@ -21,7 +21,7 @@ def session_scope(cls):
     try:
         yield session
         session.commit()
-    except:
+    except SQLAlchemyError:
         session.rollback()
         raise
     finally:
@@ -97,7 +97,7 @@ class ProverbData:
     def meaning(self):
         return self._meaning
 
-
+    
 class DatabaseManager:
     def __init__(self, config=None):
         if not config:
