@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     blackboard = Balckboard()
 
-    @bot.message_handler(commands=["help", "start"])
+    @bot.message_handler(commands=["start"])
     def send_welcome(message):
         logger.info(f"Got message from user: {message.from_user}")
         bot.reply_to(
@@ -54,6 +54,15 @@ if __name__ == "__main__":
             reply_markup=gen_markup(),
         )
 
+    @bot.message_handler(commands=["help"])
+    def send_help(message):
+        bot.reply_to(message,
+                     "Hi, this is ProverbOfTheDay Bot. "
+                     "Below are supported commands:"
+                     "/subscribe [hours]:[minutes] [timezone] e.g. (10:10 UTC+3)",
+                     reply_markup=gen_markup(),
+        )
+        
     @bot.message_handler(commands=["subscribe"])
     def subscribe(message):
         logger.info(f"User subscribed")
